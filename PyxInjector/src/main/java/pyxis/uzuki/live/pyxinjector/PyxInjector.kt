@@ -35,8 +35,9 @@ class PyxInjector {
     @Suppress("SENSELESS_COMPARISON")
     private fun executeReflection() {
         var cls = receiver.javaClass
+
         do {
-            cls.declaredFields.forEach { field ->
+            cls.declaredFields.filter { it.declaredAnnotations.isNotEmpty() }.forEach { field ->
                 field.declaredAnnotations.forEach {
                     when (it) {
                         is BindView -> attachFindViewById(it, field)
@@ -46,12 +47,16 @@ class PyxInjector {
                 }
             }
 
-            cls.declaredMethods.forEach { method ->
+            cls.declaredMethods.filter { it.declaredAnnotations.isNotEmpty() }.forEach { method ->
                 method.declaredAnnotations.forEach {
                     when (it) {
                         is OnClick -> attachClickListener(it.resource, method)
                         is OnClicks -> for (i in 0 until it.resource.size) {
                             attachClickListener(it.resource[i], method)
+                        }
+                        is OnLongClick -> attachLongClickListener(it.resource, method, it.defaultReturn)
+                        is OnLongClicks -> for (i in 0 until it.resource.size) {
+                            attachLongClickListener(it.resource[i], method, it.defaultReturn)
                         }
                     }
                 }
@@ -136,7 +141,25 @@ class PyxInjector {
             if (types.size == 1 && types[0] == View::class.java) {
                 method.isAccessible = true
                 method.invoke(receiver, it)
+            } else if (types.isEmpty()) {
+                method.isAccessible = true
+                method.invoke(receiver)
             }
+        }
+    }
+
+    private fun attachLongClickListener(id: Int, method: Method, returnValue: Boolean) {
+        view.findViewById<View>(id).setOnLongClickListener {
+            val types = method.parameterTypes
+            if (types.size == 1 && types[0] == View::class.java) {
+                method.isAccessible = true
+                method.invoke(receiver, it)
+            } else if (types.isEmpty()) {
+                method.isAccessible = true
+                method.invoke(receiver)
+            }
+
+            returnValue
         }
     }
 

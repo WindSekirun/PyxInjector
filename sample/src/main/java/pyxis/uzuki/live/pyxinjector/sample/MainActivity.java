@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import pyxis.uzuki.live.pyxinjector.annotation.BindView;
 import pyxis.uzuki.live.pyxinjector.annotation.OnClicks;
-import pyxis.uzuki.live.pyxinjector.base.InjectorActivity;
+import pyxis.uzuki.live.pyxinjector.base.InjectActivity;
 
 /**
  * PyxInjector
@@ -16,7 +16,7 @@ import pyxis.uzuki.live.pyxinjector.base.InjectorActivity;
  * Created by Pyxis on 2017-10-23.
  */
 
-public class MainActivity extends InjectorActivity {
+public class MainActivity extends InjectActivity {
 
     private @BindView TextView mTxtName; // resource id != field name with BindViewPrefix.PREFIX_M
     private @BindView TextView txtName2; // resource id == field name

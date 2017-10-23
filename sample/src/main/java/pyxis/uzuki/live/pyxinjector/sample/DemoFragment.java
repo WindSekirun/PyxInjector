@@ -6,11 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
 import pyxis.uzuki.live.pyxinjector.annotation.Argument;
 import pyxis.uzuki.live.pyxinjector.annotation.BindView;
+import pyxis.uzuki.live.pyxinjector.annotation.OnClick;
+import pyxis.uzuki.live.pyxinjector.annotation.OnLongClick;
 import pyxis.uzuki.live.pyxinjector.base.InjectFragment;
 
 /**
@@ -46,5 +49,20 @@ public class DemoFragment extends InjectFragment {
 
         mTxtName.setText(String.format("Name is %s", name));
         txtName2.setText(String.format("age is %s", age));
+    }
+
+    @OnClick(resource = R.id.btnDo)
+    private void clickDo() {
+        Toast.makeText(getActivity(), "Clicked fragment", Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(resource = R.id.btnDo2)
+    private void clickDo2(View v) {
+        Toast.makeText(getActivity(), "Clicked fragment2", Toast.LENGTH_SHORT).show();
+    }
+
+    @OnLongClick(resource = R.id.btnDo, defaultReturn = true)
+    private void longClickDo() {
+        Toast.makeText(getActivity(), "LOOOOOONG CLICK", Toast.LENGTH_SHORT).show();
     }
 }

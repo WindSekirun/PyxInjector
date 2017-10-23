@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import pyxis.uzuki.live.pyxinjector.annotation.BindView;
 import pyxis.uzuki.live.pyxinjector.annotation.Extra;
-import pyxis.uzuki.live.pyxinjector.base.InjectorActivity;
+import pyxis.uzuki.live.pyxinjector.base.InjectActivity;
 
 /**
  * PyxInjector
@@ -15,7 +15,7 @@ import pyxis.uzuki.live.pyxinjector.base.InjectorActivity;
  * Created by Pyxis on 2017-10-23.
  */
 
-public class SecondActivity extends InjectorActivity {
+public class SecondActivity extends InjectActivity {
     private @Extra("name") String name = ""; // explicit statement
     private @Extra String age = ""; // extra name = field name
 
@@ -25,7 +25,7 @@ public class SecondActivity extends InjectorActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_fragment);
 
         DemoFragment fragment = new DemoFragment();
         Bundle bundle = new Bundle();

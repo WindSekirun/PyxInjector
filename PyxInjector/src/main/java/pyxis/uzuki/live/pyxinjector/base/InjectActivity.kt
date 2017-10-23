@@ -5,10 +5,10 @@ import pyxis.uzuki.live.pyxinjector.PyxInjector
 
 /**
  * PyxInjector
- * Class: InjectorActivity
+ * Class: InjectActivity
  * Created by Pyxis on 2017-10-23.
  */
-open class InjectorActivity : AppCompatActivity() {
+open class InjectActivity : AppCompatActivity() {
 
     protected val injector = PyxInjector()
 
