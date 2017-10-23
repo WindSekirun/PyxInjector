@@ -123,6 +123,19 @@ It support three mode of Injection
 2. methods with View parameter
 3. defaultReturn : true if the callback consumed the long click, false (default or ignore) otherwise.
 
+### Config (Optional)
+as 1.0.0 We support Config of PyxInjector.
+
+Application class
+```Java
+Config config = new Config(BindViewPrefix.PREFIX_M);
+PyxInjector.initializeApplication(config);
+```
+
+#### BindViewPrefix
+* None - (DEFAULT) not apply rule
+* PREFIX_M - apply implicit rule when field name is mTxtName and view id is txtName
+
 ### Custom Object
 as 1.0.0, We support *InjectActivity*, *InjectFragment*, *InjectSupportFragment* to inject all activity / fragement.
 
