@@ -27,8 +27,7 @@ class PyxInjector {
 
     private fun executeReflection() {
         var cls = receiver.javaClass
-        while (true) {
-            // BindView
+        do {
             cls.declaredFields.forEach { field ->
                 field.declaredAnnotations.forEach forEachAnnotations@ {
                     when (it) {
@@ -71,10 +70,12 @@ class PyxInjector {
                 }
             }
 
-            cls = cls.getSuperclass()
-            if (cls == null)
+            try {
+                cls = cls.getSuperclass()
+            } catch (e: Exception) {
                 break
-        }
+            }
+        } while (cls != null)
     }
 
     private fun attachClickListener(id: Int, method: Method) {
