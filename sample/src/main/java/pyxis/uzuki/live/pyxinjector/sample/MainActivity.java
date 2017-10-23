@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import pyxis.uzuki.live.pyxinjector.annotation.BindView;
-import pyxis.uzuki.live.pyxinjector.annotation.OnClick;
+import pyxis.uzuki.live.pyxinjector.annotation.OnClicks;
 import pyxis.uzuki.live.pyxinjector.base.InjectorActivity;
 
 /**
@@ -32,7 +32,7 @@ public class MainActivity extends InjectorActivity {
         txtName3.setText("explicit statement");
     }
 
-    @OnClick(resource = R.id.btnDo)
+    @OnClicks(resource = {R.id.btnDo, R.id.btnDo2})
     private void clickDo(View v) {
         Intent intent = new Intent(this, SecondActivity.class);
         intent.putExtra("name", "John");

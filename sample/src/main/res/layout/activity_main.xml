@@ -1,34 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:layout_height="match_parent">
+    android:padding="16dp">
 
     <TextView
+        android:id="@+id/txtName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#000"
-        android:textSize="12sp"
-        android:id="@+id/txtName"/>
+        android:textSize="12sp" />
 
     <TextView
+        android:id="@+id/txtName2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#000"
-        android:textSize="12sp"
-        android:id="@+id/txtName2"/>
+        android:textSize="12sp" />
 
     <TextView
+        android:id="@+id/txtName3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#000"
-        android:textSize="12sp"
-        android:id="@+id/txtName3"/>
+        android:textSize="12sp" />
 
     <Button
+        android:id="@+id/btnDo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="DO IT!!"
-        android:id="@+id/btnDo"/>
+        android:text="DO IT!!" />
+
+    <Button
+        android:id="@+id/btnDo2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DO IT!!" />
 </LinearLayout>

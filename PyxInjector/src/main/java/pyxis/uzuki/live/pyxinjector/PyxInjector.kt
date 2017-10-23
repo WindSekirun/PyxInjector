@@ -32,11 +32,12 @@ class PyxInjector {
         executeReflection()
     }
 
+    @Suppress("SENSELESS_COMPARISON")
     private fun executeReflection() {
         var cls = receiver.javaClass
         do {
             cls.declaredFields.forEach { field ->
-                field.declaredAnnotations.forEach forEachAnnotations@ {
+                field.declaredAnnotations.forEach {
                     when (it) {
                         is BindView -> attachFindViewById(it, field)
                         is Extra -> attachExtra(it, field)
@@ -47,16 +48,9 @@ class PyxInjector {
             cls.declaredMethods.forEach { method ->
                 method.declaredAnnotations.forEach {
                     when (it) {
-                        is OnClick -> {
-                            val id = it.resource
-                            attachClickListener(id, method)
-                        }
-
-                        is OnClicks -> {
-                            val ids = it.resources
-                            for (i in 0 until ids.size) {
-                                attachClickListener(ids[i], method)
-                            }
+                        is OnClick -> attachClickListener(it.resource, method)
+                        is OnClicks -> for (i in 0 until it.resource.size) {
+                            attachClickListener(it.resource[i], method)
                         }
                     }
                 }
