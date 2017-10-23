@@ -1,10 +1,10 @@
 package pyxis.uzuki.live.pyxinjector.sample;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import pyxis.uzuki.live.pyxinjector.annotation.BindView;
 import pyxis.uzuki.live.pyxinjector.annotation.OnClick;
@@ -18,18 +18,25 @@ import pyxis.uzuki.live.pyxinjector.base.InjectorActivity;
 
 public class MainActivity extends InjectorActivity {
 
-    private @BindView(resource = R.id.txtName) TextView txtName;
+    private @BindView TextView mTxtName; // resource id != field name with BindViewPrefix.PREFIX_M
+    private @BindView TextView txtName2; // resource id == field name
+    private @BindView(resource = R.id.txtName3) TextView txtName3; // explicit statement
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        txtName.setText("Hello, world!");
+        mTxtName.setText("resource id != field name with BindViewPrefix.PREFIX_M");
+        txtName2.setText("resource id == field name");
+        txtName3.setText("explicit statement");
     }
 
     @OnClick(resource = R.id.btnDo)
     private void clickDo(View v) {
-        Toast.makeText(this, "Clicked button!", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, SecondActivity.class);
+        intent.putExtra("name", "John");
+        intent.putExtra("age", "17");
+        startActivity(intent);
     }
 }

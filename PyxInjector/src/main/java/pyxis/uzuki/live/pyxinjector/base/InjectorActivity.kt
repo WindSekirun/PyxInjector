@@ -14,6 +14,6 @@ open class InjectorActivity : AppCompatActivity() {
 
     override fun onContentChanged() {
         super.onContentChanged()
-        injector.execute(this, findViewById(android.R.id.content))
+        injector.execute(this, this, findViewById(android.R.id.content))
     }
 }

@@ -7,4 +7,4 @@ package pyxis.uzuki.live.pyxinjector.annotation
  */
 
 @Target(AnnotationTarget.FIELD)
-annotation class BindView(val resource: Int)
+annotation class BindView(val resource: Int = 0)

@@ -7,4 +7,4 @@ package pyxis.uzuki.live.pyxinjector.annotation
  */
 
 @Target(AnnotationTarget.FIELD)
-annotation class Extra(val value: String)
+annotation class Extra(val value: String = "")
