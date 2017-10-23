@@ -1,5 +1,6 @@
 package pyxis.uzuki.live.pyxinjector.sample;
 
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.TextView;
@@ -26,7 +27,13 @@ public class SecondActivity extends InjectorActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTxtName.setText(String.format("Name is %s", name));
-        txtName2.setText(String.format("Age is %s", age));
+        DemoFragment fragment = new DemoFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("name", name);
+        bundle.putString("age", age);
+        fragment.setArguments(bundle);
+
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction().add(R.id.container, fragment).commit();
     }
 }

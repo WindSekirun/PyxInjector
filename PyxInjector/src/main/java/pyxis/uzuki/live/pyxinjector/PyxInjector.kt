@@ -1,12 +1,10 @@
 package pyxis.uzuki.live.pyxinjector
 
 import android.app.Activity
+import android.app.Fragment
 import android.content.Context
 import android.view.View
-import pyxis.uzuki.live.pyxinjector.annotation.BindView
-import pyxis.uzuki.live.pyxinjector.annotation.Extra
-import pyxis.uzuki.live.pyxinjector.annotation.OnClick
-import pyxis.uzuki.live.pyxinjector.annotation.OnClicks
+import pyxis.uzuki.live.pyxinjector.annotation.*
 import pyxis.uzuki.live.pyxinjector.config.BindViewPrefix
 import pyxis.uzuki.live.pyxinjector.config.Config
 import java.lang.reflect.Field
@@ -18,6 +16,8 @@ import java.lang.reflect.Method
  * Class: PyxInjector
  * Created by Pyxis on 2017-10-23.
  */
+
+typealias SupportFragment = android.support.v4.app.Fragment
 
 class PyxInjector {
     private lateinit var context: Context
@@ -41,6 +41,7 @@ class PyxInjector {
                     when (it) {
                         is BindView -> attachFindViewById(it, field)
                         is Extra -> attachExtra(it, field)
+                        is Argument -> attachArgument(it, field)
                     }
                 }
             }
@@ -83,7 +84,7 @@ class PyxInjector {
     }
 
     private fun attachExtra(extra: Extra, field: Field) {
-        if ((receiver is Activity).not())
+        if (receiver !is Activity)
             return
 
         var name = extra.value
@@ -93,6 +94,37 @@ class PyxInjector {
 
         val activity = receiver as Activity
         val bundle = activity.intent.extras
+
+        field.isAccessible = true
+        field.set(receiver, bundle.get(name))
+    }
+
+    private fun attachArgument(argument: Argument, field: Field) {
+        if (!(receiver is Fragment || receiver is SupportFragment))
+            return
+
+        var name = argument.value
+        if (name.isEmpty()) {
+            name = field.name
+        }
+
+        when (receiver) {
+            is Fragment -> attachFragmentArgument(name, field)
+            is SupportFragment -> attachSupportFragmentArgument(name, field)
+        }
+    }
+
+    private fun attachSupportFragmentArgument(name: String, field: Field) {
+        val fragment = receiver as SupportFragment
+        val bundle = fragment.arguments
+
+        field.isAccessible = true
+        field.set(receiver, bundle.get(name))
+    }
+
+    private fun attachFragmentArgument(name: String, field: Field) {
+        val fragment = receiver as Fragment
+        val bundle = fragment.arguments
 
         field.isAccessible = true
         field.set(receiver, bundle.get(name))
