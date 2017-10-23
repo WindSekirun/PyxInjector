@@ -2,7 +2,7 @@ package pyxis.uzuki.live.pyxinjector.annotation
 
 /**
  * PyxInjector
- * Class: OnClicks
+ * Class: OnLongClicks
  * Created by Pyxis on 2017-10-23.
  */
 

@@ -17,8 +17,6 @@ import java.lang.reflect.Method
  * Created by Pyxis on 2017-10-23.
  */
 
-typealias SupportFragment = android.support.v4.app.Fragment
-
 class PyxInjector {
     private lateinit var context: Context
     private lateinit var receiver: Any
