@@ -32,7 +32,7 @@ Precondition: **Activity / Fragment will inherit *InjectActivity*, *InjectFragme
 
 Annotation Field with @BindView with Optional View ID for PyxInjector to find and cast the corresponding view.
 
-```
+```Java
 private @BindView TextView mTxtName; // 1)
 private @BindView TextView txtName2; // 2)
 private @BindView(resource = R.id.txtName3) TextView txtName3; // 3)
@@ -49,7 +49,7 @@ Precondition: **Activity will inherit *InjectActivity* or your custom object**
 
 Annotation Field with @Extra with Optional extra key to find and cast the corresponding intent extras.
 
-```
+```Java
 private @Extra String age = ""; // 1)
 private @Extra("name") String name = ""; // 2)
 ```
@@ -64,7 +64,7 @@ Precondition: **Fragment will inherit *InjectFragment*, *InjectSupportFragment* 
 
 Annotation Field with @Argument with Optional extra key to find and cast the corrsponding fragment arguments.
 
-```
+```Java
 private @Argument String age = ""; // 1)
 private @Argument("name") String name = ""; // 2)
 ```
@@ -79,7 +79,7 @@ Precondition: **Activity / Fragment will inherit *InjectActivity*, *InjectFragme
 
 Annotation Field with @OnClick, @OnClicks with View ID to find and invoke methods
 
-```
+```Java
 @OnClick(resource = R.id.btnDo)
 private void clickDo() { // 1)
     Toast.makeText(getActivity(), "Clicked fragment", Toast.LENGTH_SHORT).show();
@@ -103,7 +103,7 @@ Precondition: **Activity / Fragment will inherit *InjectActivity*, *InjectFragme
 
 Annotation Field with @OnClick, @OnClicks with View ID to find and invoke methods
 
-```
+```Java
 @OnLongClick(resource = R.id.btnDo)
 private void clickDo() { // 1)
     Toast.makeText(getActivity(), "Clicked fragment", Toast.LENGTH_SHORT).show();
@@ -131,7 +131,7 @@ if you need to inherit other class, insert this code in proper methods
 #### Fragment
 
 **Kotlin**
-```
+```Kotlin
 protected val injector = PyxInjector()
 
 override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -141,7 +141,7 @@ override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
 ```
 
 **Java**
-```
+```Java
 protected PyxInjector injector = new PyxInjector();
 
 @Override
@@ -154,7 +154,7 @@ public void onViewCreated(@Nullable View view, @Nullable Bundle savedInstanceSta
 #### Activity or Others
 
 **Kotlin**
-```
+```Kotlin
 protected val injector = PyxInjector()
 
 override fun onContentChanged() {
@@ -164,7 +164,7 @@ override fun onContentChanged() {
 ```
 
 **Java**
-```
+```Java
 protected PyxInjector injector = new PyxInjector();
 
 @Override
