@@ -1,5 +1,5 @@
 ## PyxInjector
-[![](https://jitpack.io/v/WindSekirun/PyxInjector.svg)](https://jitpack.io/#WindSekirun/PyxInjector) [![Kotlin](https://img.shields.io/badge/kotlin-1.1.4-blue.svg)](http://kotlinlang.org) [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-PyxInjector-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/6362) [![](https://jitpack.io/v/WindSekirun/PyxInjector.svg)](https://jitpack.io/#WindSekirun/PyxInjector) [![Kotlin](https://img.shields.io/badge/kotlin-1.1.4-blue.svg)](http://kotlinlang.org) [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0) 
 
 
 **Annotation Field Injector Library**
