@@ -8,6 +8,8 @@ Pyx is abbreviation of Pyxis, small and faint constellation in the southern sky.
 
 PyxInjector help you to inject field, methods by various annotation field
 
+릴리즈 소개 글은 [개인 블로그 PyxisPub 에서 보실 수 있습니다.](https://blog.uzuki.live/pyxinjector-dependency-injections/)
+
 ### Usages
 
 *rootProject/build.gradle*
