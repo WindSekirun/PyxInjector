@@ -111,9 +111,11 @@ class PyxInjector {
 
         val activity = receiver as Activity
         val bundle = activity.intent.extras
+        val value = bundle.get(name)
 
         field.isAccessible = true
-        field.set(receiver, bundle.get(name))
+        if (value != null)
+            field.set(receiver, value)
     }
 
     private fun attachArgument(argument: Argument, field: Field) {
