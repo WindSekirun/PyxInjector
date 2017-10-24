@@ -38,7 +38,7 @@ Annotation Field with @BindView with Optional View ID for PyxInjector to find an
 ```Java
 private @BindView TextView mTxtName; // 1)
 private @BindView TextView txtName2; // 2)
-private @BindView(resource = R.id.txtName3) TextView txtName3; // 3)
+private @BindView(R.id.txtName3) TextView txtName3; // 3)
 ```
 
 It support three mode of Injection
@@ -83,12 +83,12 @@ Precondition: **Activity / Fragment will inherit *InjectActivity*, *InjectFragme
 Annotation Field with @OnClick, @OnClicks with View ID to find and invoke methods
 
 ```Java
-@OnClick(resource = R.id.btnDo)
+@OnClick(R.id.btnDo)
 private void clickDo() { // 1)
     Toast.makeText(getActivity(), "Clicked fragment", Toast.LENGTH_SHORT).show();
 }
 
-@OnClicks(resource = {R.id.btnDo, R.id.btnDo2})
+@OnClicks({R.id.btnDo, R.id.btnDo2})
 private void clickDo(View v) { // 2)
     Intent intent = new Intent(this, SecondActivity.class);
     intent.putExtra("name", "John");
@@ -104,15 +104,15 @@ It support two mode of Injection
 #### *@OnLongClick* / *@OnLongClicks*
 Precondition: **Activity / Fragment will inherit *InjectActivity*, *InjectFragment*, *InjectSupportFragment* or your custom object**
 
-Annotation Field with @OnClick, @OnClicks with View ID to find and invoke methods
+Annotation Field with @OnLongClick, @OnLongClicks with View ID to find and invoke methods
 
 ```Java
-@OnLongClick(resource = R.id.btnDo)
+@OnLongClick(R.id.btnDo)
 private void clickDo() { // 1)
     Toast.makeText(getActivity(), "Clicked fragment", Toast.LENGTH_SHORT).show();
 }
 
-@OnLongClicks(resource = {R.id.btnDo, R.id.btnDo2}, defaultReturn = true)
+@OnLongClicks(value = {R.id.btnDo, R.id.btnDo2}, defaultReturn = true)
 private void clickDo(View v) { // 2)
     Intent intent = new Intent(this, SecondActivity.class);
     intent.putExtra("name", "John");
@@ -125,6 +125,72 @@ It support three mode of Injection
 1. methods without parameter : You don't need to declare any parameter
 2. methods with View parameter
 3. defaultReturn : true if the callback consumed the long click, false (default or ignore) otherwise.
+
+#### *@OnSeekbarChange* [Since 1.1]
+Precondition: **Activity / Fragment will inherit *InjectActivity*, *InjectFragment*, *InjectSupportFragment* or your custom object**
+
+Annotation Field with @OnSeekbarChange with View ID to find and invoke OnSeekBarChangeListener.onProgressChanged(seekbar: SeekBar?, progress: Int, fromUser: Boolean)
+
+```Java
+@OnSeekbarChange(R.id.seekBar)
+private void changeSeekbar(int progress, boolean fromUser) {
+    txtName3.setText(String.format("changeSeekbar::progress = %d, fromUser = %s", progress, String.valueOf(fromUser)));
+}
+```
+
+#### *@OnEditTextChange* [Since 1.1]
+Precondition: **Activity / Fragment will inherit *InjectActivity*, *InjectFragment*, *InjectSupportFragment* or your custom object**
+
+Annotation Field with @OnEditTextChange with View ID to find and invoke methods of TextWatcher
+
+
+```Java
+@OnEditTextChange(value = R.id.editText, trigger = EditTextChangeTrigger.AFTER)
+private void changeAfterEditText(EditText editText) {
+    mTxtName.setText("changeAfterEditText::");
+}
+
+@OnEditTextChange(value = R.id.editText, trigger = EditTextChangeTrigger.BEFORE)
+private void changeBeforeEditText(EditText editText, CharSequence s, int start, int count, int after) {
+    txtName2.setText(String.format("changeBeforeEditText:: s = %s, start = %d, count = %d, after = %d", s, start, count, after));
+}
+
+@OnEditTextChange(R.id.editText)
+private void changeTextEditText(EditText editText, CharSequence s, int start, int before, int count) {
+    txtName3.setText(String.format("changeTextEditText:: s = %s, start = %d, before = %d, count = %d", s, start, before, count));
+}
+```
+
+##### EditTextChangeTrigger
+* EditTextChangeTrigger.AFTER : invoke when TextWatcher.afterTextChanged(Editable s) is called
+* EditTextChangeTrigger.BEFORE : invoke when TextWatcher.beforeTextChanged(CharSequence s, int start, int count, int after) is called
+* EditTextChangeTrigger.TEXT (DEFAULT, OMISSIBLE) : invoke when TextWatcher.onTextChanged(CharSequence s, int start, int before, int count) is called
+
+#### *@OnCheckChange* [Since 1.1]
+Precondition: **Activity / Fragment will inherit *InjectActivity*, *InjectFragment*, *InjectSupportFragment* or your custom object**
+
+Annotation Field with @OnCheckChange with View ID to find and invoke CompoundButton.OnCheckedChangeListener.onCheckedChanged (CompoundButton buttonView, boolean isChecked)
+                                                                                                            
+```Java
+@OnCheckChange(R.id.checkBox)
+private void changeCheckBox(boolean isChecked) {
+    txtName3.setText(String.format("changeCheckBox:: isChecked = %s", String.valueOf(isChecked)));
+}
+```
+
+
+### Non-Activity / Fragment Binding [Since 1.1]
+
+```Java
+public class ListHolder extends RecyclerView.ViewHolder {
+    private @BindView TextView txtNum;
+
+    public ListHolder(View itemView) {
+        super(itemView);
+        PyxInjector.getInstance().execute(getActivity(), this, itemView);
+    }
+}
+```
 
 ### Config (Optional)
 as 1.0.0 We support Config of PyxInjector.

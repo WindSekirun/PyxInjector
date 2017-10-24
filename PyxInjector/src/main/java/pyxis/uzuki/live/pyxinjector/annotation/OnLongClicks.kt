@@ -7,4 +7,4 @@ package pyxis.uzuki.live.pyxinjector.annotation
  */
 
 @Target(AnnotationTarget.FUNCTION)
-annotation class OnLongClicks(val defaultReturn: Boolean = false, vararg val resource: Int)
+annotation class OnLongClicks(val defaultReturn: Boolean = false, vararg val value: Int)

@@ -1,15 +1,23 @@
 package pyxis.uzuki.live.pyxinjector
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Fragment
 import android.content.Context
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
+import android.widget.CompoundButton
+import android.widget.EditText
+import android.widget.SeekBar
 import pyxis.uzuki.live.pyxinjector.annotation.*
 import pyxis.uzuki.live.pyxinjector.config.BindViewPrefix
 import pyxis.uzuki.live.pyxinjector.config.Config
+import pyxis.uzuki.live.pyxinjector.constants.SupportFragment
+import pyxis.uzuki.live.pyxinjector.exception.*
 import java.lang.reflect.Field
 import java.lang.reflect.Method
-
+import java.lang.reflect.Modifier
 
 /**
  * PyxInjector
@@ -48,14 +56,17 @@ class PyxInjector {
             cls.declaredMethods.filter { it.declaredAnnotations.isNotEmpty() }.forEach { method ->
                 method.declaredAnnotations.forEach {
                     when (it) {
-                        is OnClick -> attachClickListener(it.resource, method)
-                        is OnClicks -> for (i in 0 until it.resource.size) {
-                            attachClickListener(it.resource[i], method)
+                        is OnClick -> attachClickListener(it.value, method)
+                        is OnClicks -> for (i in 0 until it.value.size) {
+                            attachClickListener(it.value[i], method)
                         }
-                        is OnLongClick -> attachLongClickListener(it.resource, method, it.defaultReturn)
-                        is OnLongClicks -> for (i in 0 until it.resource.size) {
-                            attachLongClickListener(it.resource[i], method, it.defaultReturn)
+                        is OnLongClick -> attachLongClickListener(it.value, method, it.defaultReturn)
+                        is OnLongClicks -> for (i in 0 until it.value.size) {
+                            attachLongClickListener(it.value[i], method, it.defaultReturn)
                         }
+                        is OnSeekbarChange -> attachSeekbarChange(it, method)
+                        is OnEditTextChange -> attachEditTextChange(it, method)
+                        is OnCheckChange -> attachCheckChange(it, method)
                     }
                 }
             }
@@ -69,11 +80,11 @@ class PyxInjector {
     }
 
     private fun attachFindViewById(bindView: BindView, field: Field) {
-        var id = bindView.resource
+        var id = bindView.value
         if (id == 0) {
             var name = field.name
 
-            if (config.bindViewPrefix == BindViewPrefix.PREFIX_M && name[0] == 'm') { // mTxtName 등에서 m 만 제외
+            if (config.bindViewPrefix == BindViewPrefix.PREFIX_M && name[0] == 'm') {
                 name = name.substring(1)
                 name = name[0].toLowerCase() + name.substring(1)
             }
@@ -161,8 +172,136 @@ class PyxInjector {
         }
     }
 
+    private fun attachSeekbarChange(seekbarChange: OnSeekbarChange, method: Method) {
+        val seekbar: SeekBar
+
+        try {
+            seekbar = view.findViewById(seekbarChange.value)
+        } catch (e: Exception) {
+            throwException(CASTING_FAILED_VIEW_ID.format("SeekBar"))
+            return
+        }
+
+        seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onStopTrackingTouch(p0: SeekBar?) {
+                // not implemented
+            }
+
+            override fun onStartTrackingTouch(p0: SeekBar?) {
+                // not implemented
+            }
+
+            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                val types = method.parameterTypes
+                if (types.size == 2 && types[0] == Integer::class.javaPrimitiveType && types[1] == Boolean::class.javaPrimitiveType) {
+                    method.isAccessible = true
+                    method.invoke(receiver, p1, p2)
+                } else {
+                    val modifier = Modifier.toString(method.modifiers)
+                    val name = method.name
+                    throwException(EXCEPT_TWO_PARAMETER.format("$modifier void $name(int progress, boolean fromUser)"))
+                    return
+                }
+            }
+        })
+    }
+
+    private fun attachEditTextChange(editTextChange: OnEditTextChange, method: Method) {
+        val editText: EditText
+
+        try {
+            editText = view.findViewById(editTextChange.value)
+        } catch (e: Exception) {
+            throwException(CASTING_FAILED_VIEW_ID.format("EditText"))
+            return
+        }
+
+        val trigger = editTextChange.trigger
+        val types = method.parameterTypes
+
+        editText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                if (trigger != EditTextChangeTrigger.AFTER)
+                    return
+
+                if (types.size == 1 && types[0] == EditText::class.java) {
+                    method.isAccessible = true
+                    method.invoke(receiver, editText)
+                } else {
+                    val modifier = Modifier.toString(method.modifiers)
+                    val name = method.name
+                    throwException(EXCEPT_ONE_PARAMETER.format("$modifier void $name(EditText editText)"))
+                    return
+                }
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (trigger != EditTextChangeTrigger.BEFORE)
+                    return
+
+                if (types.size == 5 && types[0] == EditText::class.java && types[1] == CharSequence::class.java &&
+                        types[2] == Integer::class.javaPrimitiveType && types[3] == Integer::class.javaPrimitiveType &&
+                        types[4] == Integer::class.javaPrimitiveType) {
+                    method.isAccessible = true
+                    method.invoke(receiver, editText, p0, p1, p2, p3)
+                } else {
+                    val modifier = Modifier.toString(method.modifiers)
+                    val name = method.name
+                    throwException(EXCEPT_FIVE_PARAMETER.format(
+                            "$modifier void $name(EditText editText, CharSequence s, int start, int count, int after)"))
+                    return
+                }
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (trigger != EditTextChangeTrigger.TEXT)
+                    return
+
+                if (types.size == 5 && types[0] == EditText::class.java && types[1] == CharSequence::class.java &&
+                        types[2] == Integer::class.javaPrimitiveType && types[3] == Integer::class.javaPrimitiveType &&
+                        types[4] == Integer::class.javaPrimitiveType) {
+                    method.isAccessible = true
+                    method.invoke(receiver, editText, p0, p1, p2, p3)
+                } else {
+                    val modifier = Modifier.toString(method.modifiers)
+                    val name = method.name
+                    throwException(EXCEPT_FIVE_PARAMETER.format(
+                            "$modifier void $name(EditText editText, CharSequence s, int start, int before, int count)"))
+                    return
+                }
+            }
+        })
+    }
+
+    private fun attachCheckChange(checkChange: OnCheckChange, method: Method) {
+        val compoundButton: CompoundButton
+
+        try {
+            compoundButton = view.findViewById(checkChange.value)
+        } catch (e: Exception) {
+            throwException(CASTING_FAILED_VIEW_ID.format("CompoundButton (CheckBox, RadioButton, Switch, SwitchCompat, ToggleButton)"))
+            return
+        }
+
+        val types = method.parameterTypes
+        compoundButton.setOnCheckedChangeListener { _, b ->
+            if (types.size == 1 && types[0] == Boolean::class.javaPrimitiveType) {
+                method.isAccessible = true
+                method.invoke(receiver, b)
+            } else {
+                val modifier = Modifier.toString(method.modifiers)
+                val name = method.name
+                throwException(EXCEPT_ONE_PARAMETER.format("$modifier void $name(boolean isChecked)"))
+            }
+        }
+    }
+
     companion object {
         var config: Config = Config(BindViewPrefix.NONE)
+
+        @SuppressLint("StaticFieldLeak")
+        @JvmStatic
+        val instance: PyxInjector = PyxInjector()
 
         @JvmStatic
         fun initializeApplication(config: Config) {

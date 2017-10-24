@@ -1,4 +1,4 @@
-package pyxis.uzuki.live.pyxinjector
+package pyxis.uzuki.live.pyxinjector.constants
 
 /**
  * PyxInjector
