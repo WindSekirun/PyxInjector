@@ -7,4 +7,4 @@ package pyxis.uzuki.live.pyxinjector.annotation
  */
 
 @Target(AnnotationTarget.FUNCTION)
-annotation class OnClick(val resource: Int)
+annotation class OnClick(val value: Int)

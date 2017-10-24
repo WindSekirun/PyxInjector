@@ -28,7 +28,7 @@ public class DemoFragment extends InjectFragment {
 
     private @BindView TextView mTxtName; // resource id != field name with BindViewPrefix.PREFIX_M
     private @BindView TextView txtName2; // resource id == field name
-    private @BindView(resource = R.id.txtName3) TextView txtName3; // explicit statement
+    private @BindView(R.id.txtName3) TextView txtName3; // explicit statement
 
     @Nullable
     @Override
@@ -51,17 +51,17 @@ public class DemoFragment extends InjectFragment {
         txtName2.setText(String.format("age is %s", age));
     }
 
-    @OnClick(resource = R.id.btnDo)
+    @OnClick(R.id.btnDo)
     private void clickDo() {
         Toast.makeText(getActivity(), "Clicked fragment", Toast.LENGTH_SHORT).show();
     }
 
-    @OnClick(resource = R.id.btnDo2)
+    @OnClick(R.id.btnDo2)
     private void clickDo2(View v) {
         Toast.makeText(getActivity(), "Clicked fragment2", Toast.LENGTH_SHORT).show();
     }
 
-    @OnLongClick(resource = R.id.btnDo, defaultReturn = true)
+    @OnLongClick(value = R.id.btnDo, defaultReturn = true)
     private void longClickDo() {
         Toast.makeText(getActivity(), "LOOOOOONG CLICK", Toast.LENGTH_SHORT).show();
     }

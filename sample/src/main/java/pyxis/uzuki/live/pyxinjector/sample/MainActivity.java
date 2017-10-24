@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import pyxis.uzuki.live.pyxinjector.annotation.BindView;
 import pyxis.uzuki.live.pyxinjector.annotation.OnClicks;
+import pyxis.uzuki.live.pyxinjector.annotation.OnSeekbarChange;
 import pyxis.uzuki.live.pyxinjector.base.InjectActivity;
 
 /**
@@ -20,7 +21,7 @@ public class MainActivity extends InjectActivity {
 
     private @BindView TextView mTxtName; // resource id != field name with BindViewPrefix.PREFIX_M
     private @BindView TextView txtName2; // resource id == field name
-    private @BindView(resource = R.id.txtName3) TextView txtName3; // explicit statement
+    private @BindView(R.id.txtName3) TextView txtName3; // explicit statement
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,11 +33,16 @@ public class MainActivity extends InjectActivity {
         txtName3.setText("explicit statement");
     }
 
-    @OnClicks(resource = {R.id.btnDo, R.id.btnDo2})
+    @OnClicks({R.id.btnDo, R.id.btnDo2})
     private void clickDo(View v) {
         Intent intent = new Intent(this, SecondActivity.class);
         intent.putExtra("name", "John");
         intent.putExtra("age", "17");
         startActivity(intent);
+    }
+
+    @OnSeekbarChange(R.id.seekBar)
+    private void changeSeekbar(int progress, boolean fromUser) {
+        txtName3.setText(String.format("changeSeekbar::progress = %d, fromUser = %s", progress, String.valueOf(fromUser)));
     }
 }
