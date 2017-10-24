@@ -251,7 +251,7 @@ protected PyxInjector injector = new PyxInjector();
 @Override
 public void onContentChanged() {
     super.onContentChanged();
-    injector.execute(this, this, getCreatedView());
+    injector.execute(this, this, findViewById(android.R.id.content));
 }
 ```
 
