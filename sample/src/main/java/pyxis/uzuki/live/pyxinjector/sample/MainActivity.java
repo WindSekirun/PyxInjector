@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import pyxis.uzuki.live.pyxinjector.annotation.BindView;
 import pyxis.uzuki.live.pyxinjector.annotation.EditTextChangeTrigger;
+import pyxis.uzuki.live.pyxinjector.annotation.OnCheckChange;
 import pyxis.uzuki.live.pyxinjector.annotation.OnClicks;
 import pyxis.uzuki.live.pyxinjector.annotation.OnEditTextChange;
 import pyxis.uzuki.live.pyxinjector.annotation.OnSeekbarChange;
@@ -48,7 +49,7 @@ public class MainActivity extends InjectActivity {
 
     @OnSeekbarChange(R.id.seekBar)
     private void changeSeekbar(int progress, boolean fromUser) {
-        txtName3.setText(String.format("changeSeekbar::progress = %d, fromUser = %s", progress, String.valueOf(false)));
+        txtName3.setText(String.format("changeSeekbar::progress = %d, fromUser = %s", progress, String.valueOf(fromUser)));
     }
 
     @OnEditTextChange(value = R.id.editText, trigger = EditTextChangeTrigger.AFTER)
@@ -64,5 +65,10 @@ public class MainActivity extends InjectActivity {
     @OnEditTextChange(R.id.editText)
     private void changeTextEditText(EditText editText, CharSequence s, int start, int before, int count) {
         txtName3.setText(String.format("changeTextEditText:: s = %s, start = %d, before = %d, count = %d", s, start, before, count));
+    }
+
+    @OnCheckChange(R.id.checkBox)
+    private void changeCheckBox(boolean isChecked) {
+        txtName3.setText(String.format("changeCheckBox:: isChecked = %s", String.valueOf(isChecked)));
     }
 }

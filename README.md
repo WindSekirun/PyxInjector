@@ -141,7 +141,7 @@ private void changeSeekbar(int progress, boolean fromUser) {
 #### *@OnEditTextChange* [Since 1.1]
 Precondition: **Activity / Fragment will inherit *InjectActivity*, *InjectFragment*, *InjectSupportFragment* or your custom object**
 
-Annotation Field with @OnSeekbarChange with View ID to find and invoke methods of TextWatcher
+Annotation Field with @OnEditTextChange with View ID to find and invoke methods of TextWatcher
 
 
 ```Java
@@ -160,6 +160,24 @@ private void changeTextEditText(EditText editText, CharSequence s, int start, in
     txtName3.setText(String.format("changeTextEditText:: s = %s, start = %d, before = %d, count = %d", s, start, before, count));
 }
 ```
+
+##### EditTextChangeTrigger
+* EditTextChangeTrigger.AFTER : invoke when TextWatcher.afterTextChanged(Editable s) is called
+* EditTextChangeTrigger.BEFORE : invoke when TextWatcher.beforeTextChanged(CharSequence s, int start, int count, int after) is called
+* EditTextChangeTrigger.TEXT (DEFAULT, OMISSIBLE) : invoke when TextWatcher.onTextChanged(CharSequence s, int start, int before, int count) is called
+
+#### *@OnCheckChange* [Since 1.1]
+Precondition: **Activity / Fragment will inherit *InjectActivity*, *InjectFragment*, *InjectSupportFragment* or your custom object**
+
+Annotation Field with @OnCheckChange with View ID to find and invoke CompoundButton.OnCheckedChangeListener.onCheckedChanged (CompoundButton buttonView, boolean isChecked)
+                                                                                                            
+```Java
+@OnCheckChange(R.id.checkBox)
+private void changeCheckBox(boolean isChecked) {
+    txtName3.setText(String.format("changeCheckBox:: isChecked = %s", String.valueOf(isChecked)));
+}
+```
+
 
 ### Non-Activity / Fragment Binding [Since 1.1]
 

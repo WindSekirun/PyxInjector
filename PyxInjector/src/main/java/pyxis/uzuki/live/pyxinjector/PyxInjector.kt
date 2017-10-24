@@ -7,6 +7,7 @@ import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.widget.CompoundButton
 import android.widget.EditText
 import android.widget.SeekBar
 import pyxis.uzuki.live.pyxinjector.annotation.*
@@ -65,6 +66,7 @@ class PyxInjector {
                         }
                         is OnSeekbarChange -> attachSeekbarChange(it, method)
                         is OnEditTextChange -> attachEditTextChange(it, method)
+                        is OnCheckChange -> attachCheckChange(it, method)
                     }
                 }
             }
@@ -269,6 +271,29 @@ class PyxInjector {
                 }
             }
         })
+    }
+
+    private fun attachCheckChange(checkChange: OnCheckChange, method: Method) {
+        val compoundButton: CompoundButton
+
+        try {
+            compoundButton = view.findViewById(checkChange.value)
+        } catch (e: Exception) {
+            throwException(CASTING_FAILED_VIEW_ID.format("CompoundButton (CheckBox, RadioButton, Switch, SwitchCompat, ToggleButton)"))
+            return
+        }
+
+        val types = method.parameterTypes
+        compoundButton.setOnCheckedChangeListener { _, b ->
+            if (types.size == 1 && types[0] == Boolean::class.javaPrimitiveType) {
+                method.isAccessible = true
+                method.invoke(receiver, b)
+            } else {
+                val modifier = Modifier.toString(method.modifiers)
+                val name = method.name
+                throwException(EXCEPT_ONE_PARAMETER.format("$modifier void $name(boolean isChecked)"))
+            }
+        }
     }
 
     companion object {
