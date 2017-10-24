@@ -67,7 +67,7 @@ public class DemoFragment extends InjectFragment {
 
         @Override
         public ListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View inflate = View.inflate(parent.getContext(), R.layout.activity_recycler_item, parent);
+            View inflate = LayoutInflater.from(getActivity()).inflate(R.layout.activity_recycler_item, parent, false);
             return new ListHolder(inflate);
         }
 
