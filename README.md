@@ -104,7 +104,7 @@ It support two mode of Injection
 #### *@OnLongClick* / *@OnLongClicks*
 Precondition: **Activity / Fragment will inherit *InjectActivity*, *InjectFragment*, *InjectSupportFragment* or your custom object**
 
-Annotation Field with @OnClick, @OnClicks with View ID to find and invoke methods
+Annotation Field with @OnLongClick, @OnLongClicks with View ID to find and invoke methods
 
 ```Java
 @OnLongClick(resource = R.id.btnDo)
@@ -125,6 +125,18 @@ It support three mode of Injection
 1. methods without parameter : You don't need to declare any parameter
 2. methods with View parameter
 3. defaultReturn : true if the callback consumed the long click, false (default or ignore) otherwise.
+
+#### *@OnSeekbarChange*
+Precondition: **Activity / Fragment will inherit *InjectActivity*, *InjectFragment*, *InjectSupportFragment* or your custom object**
+
+Annotation Field with @OnSeekbarChange with View ID to find and invoke OnSeekBarChangeListener.onProgressChanged(seekbar: SeekBar?, progress: Int, fromUser: Boolean)
+
+```Java
+@OnSeekbarChange(R.id.seekBar)
+private void changeSeekbar(int progress, boolean fromUser) {
+    txtName3.setText(String.format("changeSeekbar::progress = %d, fromUser = %s", progress, String.valueOf(fromUser)));
+}
+```
 
 ### Config (Optional)
 as 1.0.0 We support Config of PyxInjector.

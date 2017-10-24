@@ -8,12 +8,13 @@ import android.widget.SeekBar
 import pyxis.uzuki.live.pyxinjector.annotation.*
 import pyxis.uzuki.live.pyxinjector.config.BindViewPrefix
 import pyxis.uzuki.live.pyxinjector.config.Config
-import pyxis.uzuki.live.pyxinjector.constants.EXCEPTION_EXCEPT_TWO_PARAMETER
 import pyxis.uzuki.live.pyxinjector.constants.SupportFragment
-import pyxis.uzuki.live.pyxinjector.exception.InvalidAnnotationException
+import pyxis.uzuki.live.pyxinjector.exception.CASTING_FAILED_VIEW_ID
+import pyxis.uzuki.live.pyxinjector.exception.EXCEPT_TWO_PARAMETER
+import pyxis.uzuki.live.pyxinjector.exception.throwException
 import java.lang.reflect.Field
 import java.lang.reflect.Method
-
+import java.lang.reflect.Modifier
 
 /**
  * PyxInjector
@@ -167,7 +168,16 @@ class PyxInjector {
     }
 
     private fun attachSeekbarChange(seekbarChange: OnSeekbarChange, method: Method) {
-        view.findViewById<SeekBar>(seekbarChange.value).setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        val seekbar: SeekBar
+
+        try {
+            seekbar = view.findViewById(seekbarChange.value)
+        } catch (e: Exception) {
+            throwException(CASTING_FAILED_VIEW_ID.format("SeekBar"))
+            return
+        }
+
+        seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onStopTrackingTouch(p0: SeekBar?) {
                 // not implemented
             }
@@ -182,8 +192,10 @@ class PyxInjector {
                     method.isAccessible = true
                     method.invoke(receiver, p1, p2)
                 } else {
-                    throw InvalidAnnotationException(String.format(EXCEPTION_EXCEPT_TWO_PARAMETER,
-                            "void onSeekbarChange(int progress, boolean fromUser)"))
+                    val modifier = Modifier.toString(method.modifiers)
+                    val name = method.name
+                    throwException(EXCEPT_TWO_PARAMETER.format("$modifier void $name(int progress, boolean fromUser)"))
+                    return
                 }
             }
         })

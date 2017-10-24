@@ -43,6 +43,6 @@ public class MainActivity extends InjectActivity {
 
     @OnSeekbarChange(R.id.seekBar)
     private void changeSeekbar(int progress, boolean fromUser) {
-        txtName3.setText(String.format("changeSeekbar::progress = %d, fromUser = %s", progress, String.valueOf(fromUser)));
+        txtName3.setText(String.format("changeSeekbar::progress = %d, fromUser = %s", progress, String.valueOf(false)));
     }
 }
