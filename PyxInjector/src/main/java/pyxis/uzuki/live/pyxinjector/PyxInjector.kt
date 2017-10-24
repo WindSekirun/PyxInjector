@@ -3,15 +3,16 @@ package pyxis.uzuki.live.pyxinjector
 import android.app.Activity
 import android.app.Fragment
 import android.content.Context
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
+import android.widget.EditText
 import android.widget.SeekBar
 import pyxis.uzuki.live.pyxinjector.annotation.*
 import pyxis.uzuki.live.pyxinjector.config.BindViewPrefix
 import pyxis.uzuki.live.pyxinjector.config.Config
 import pyxis.uzuki.live.pyxinjector.constants.SupportFragment
-import pyxis.uzuki.live.pyxinjector.exception.CASTING_FAILED_VIEW_ID
-import pyxis.uzuki.live.pyxinjector.exception.EXCEPT_TWO_PARAMETER
-import pyxis.uzuki.live.pyxinjector.exception.throwException
+import pyxis.uzuki.live.pyxinjector.exception.*
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
@@ -62,6 +63,7 @@ class PyxInjector {
                             attachLongClickListener(it.value[i], method, it.defaultReturn)
                         }
                         is OnSeekbarChange -> attachSeekbarChange(it, method)
+                        is OnEditTextChange -> attachEditTextChange(it, method)
                     }
                 }
             }
@@ -195,6 +197,73 @@ class PyxInjector {
                     val modifier = Modifier.toString(method.modifiers)
                     val name = method.name
                     throwException(EXCEPT_TWO_PARAMETER.format("$modifier void $name(int progress, boolean fromUser)"))
+                    return
+                }
+            }
+        })
+    }
+
+    private fun attachEditTextChange(editTextChange: OnEditTextChange, method: Method) {
+        val editText: EditText
+
+        try {
+            editText = view.findViewById(editTextChange.value)
+        } catch (e: Exception) {
+            throwException(CASTING_FAILED_VIEW_ID.format("EditText"))
+            return
+        }
+
+        val trigger = editTextChange.trigger
+        val types = method.parameterTypes
+
+        editText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                if (trigger != EditTextChangeTrigger.AFTER)
+                    return
+
+                if (types.size == 1 && types[0] == EditText::class.java) {
+                    method.isAccessible = true
+                    method.invoke(receiver, editText)
+                } else {
+                    val modifier = Modifier.toString(method.modifiers)
+                    val name = method.name
+                    throwException(EXCEPT_ONE_PARAMETER.format("$modifier void $name(EditText editText)"))
+                    return
+                }
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (trigger != EditTextChangeTrigger.BEFORE)
+                    return
+
+                if (types.size == 5 && types[0] == EditText::class.java && types[1] == CharSequence::class.java &&
+                        types[2] == Integer::class.javaPrimitiveType && types[3] == Integer::class.javaPrimitiveType &&
+                        types[4] == Integer::class.javaPrimitiveType) {
+                    method.isAccessible = true
+                    method.invoke(receiver, editText, p0, p1, p2, p3)
+                } else {
+                    val modifier = Modifier.toString(method.modifiers)
+                    val name = method.name
+                    throwException(EXCEPT_FIVE_PARAMETER.format(
+                            "$modifier void $name(EditText editText, CharSequence s, int start, int count, int after)"))
+                    return
+                }
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (trigger != EditTextChangeTrigger.TEXT)
+                    return
+
+                if (types.size == 5 && types[0] == EditText::class.java && types[1] == CharSequence::class.java &&
+                        types[2] == Integer::class.javaPrimitiveType && types[3] == Integer::class.javaPrimitiveType &&
+                        types[4] == Integer::class.javaPrimitiveType) {
+                    method.isAccessible = true
+                    method.invoke(receiver, editText, p0, p1, p2, p3)
+                } else {
+                    val modifier = Modifier.toString(method.modifiers)
+                    val name = method.name
+                    throwException(EXCEPT_FIVE_PARAMETER.format(
+                            "$modifier void $name(EditText editText, CharSequence s, int start, int before, int count)"))
                     return
                 }
             }

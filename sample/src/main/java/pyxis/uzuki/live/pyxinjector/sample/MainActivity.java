@@ -1,13 +1,17 @@
 package pyxis.uzuki.live.pyxinjector.sample;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import pyxis.uzuki.live.pyxinjector.annotation.BindView;
+import pyxis.uzuki.live.pyxinjector.annotation.EditTextChangeTrigger;
 import pyxis.uzuki.live.pyxinjector.annotation.OnClicks;
+import pyxis.uzuki.live.pyxinjector.annotation.OnEditTextChange;
 import pyxis.uzuki.live.pyxinjector.annotation.OnSeekbarChange;
 import pyxis.uzuki.live.pyxinjector.base.InjectActivity;
 
@@ -17,6 +21,7 @@ import pyxis.uzuki.live.pyxinjector.base.InjectActivity;
  * Created by Pyxis on 2017-10-23.
  */
 
+@SuppressLint({"DefaultLocale", "SetTextI18n"})
 public class MainActivity extends InjectActivity {
 
     private @BindView TextView mTxtName; // resource id != field name with BindViewPrefix.PREFIX_M
@@ -44,5 +49,20 @@ public class MainActivity extends InjectActivity {
     @OnSeekbarChange(R.id.seekBar)
     private void changeSeekbar(int progress, boolean fromUser) {
         txtName3.setText(String.format("changeSeekbar::progress = %d, fromUser = %s", progress, String.valueOf(false)));
+    }
+
+    @OnEditTextChange(value = R.id.editText, trigger = EditTextChangeTrigger.AFTER)
+    private void changeAfterEditText(EditText editText) {
+        mTxtName.setText("changeAfterEditText::");
+    }
+
+    @OnEditTextChange(value = R.id.editText, trigger = EditTextChangeTrigger.BEFORE)
+    private void changeBeforeEditText(EditText editText, CharSequence s, int start, int count, int after) {
+        txtName2.setText(String.format("changeBeforeEditText:: s = %s, start = %d, count = %d, after = %d", s, start, count, after));
+    }
+
+    @OnEditTextChange(R.id.editText)
+    private void changeTextEditText(EditText editText, CharSequence s, int start, int before, int count) {
+        txtName3.setText(String.format("changeTextEditText:: s = %s, start = %d, before = %d, count = %d", s, start, before, count));
     }
 }
