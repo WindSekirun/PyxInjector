@@ -4,9 +4,13 @@ import android.app.Activity
 import android.app.Fragment
 import android.content.Context
 import android.view.View
+import android.widget.SeekBar
 import pyxis.uzuki.live.pyxinjector.annotation.*
 import pyxis.uzuki.live.pyxinjector.config.BindViewPrefix
 import pyxis.uzuki.live.pyxinjector.config.Config
+import pyxis.uzuki.live.pyxinjector.constants.EXCEPTION_EXCEPT_TWO_PARAMETER
+import pyxis.uzuki.live.pyxinjector.constants.SupportFragment
+import pyxis.uzuki.live.pyxinjector.exception.InvalidAnnotationException
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 
@@ -56,9 +60,7 @@ class PyxInjector {
                         is OnLongClicks -> for (i in 0 until it.value.size) {
                             attachLongClickListener(it.value[i], method, it.defaultReturn)
                         }
-                        is OnSeekbarChange -> {
-
-                        }
+                        is OnSeekbarChange -> attachSeekbarChange(it, method)
                     }
                 }
             }
@@ -76,7 +78,7 @@ class PyxInjector {
         if (id == 0) {
             var name = field.name
 
-            if (config.bindViewPrefix == BindViewPrefix.PREFIX_M && name[0] == 'm') { // mTxtName 등에서 m 만 제외
+            if (config.bindViewPrefix == BindViewPrefix.PREFIX_M && name[0] == 'm') {
                 name = name.substring(1)
                 name = name[0].toLowerCase() + name.substring(1)
             }
@@ -162,6 +164,29 @@ class PyxInjector {
 
             returnValue
         }
+    }
+
+    private fun attachSeekbarChange(seekbarChange: OnSeekbarChange, method: Method) {
+        view.findViewById<SeekBar>(seekbarChange.value).setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onStopTrackingTouch(p0: SeekBar?) {
+                // not implemented
+            }
+
+            override fun onStartTrackingTouch(p0: SeekBar?) {
+                // not implemented
+            }
+
+            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                val types = method.parameterTypes
+                if (types.size == 2 && types[0] == Integer::class.javaPrimitiveType && types[1] == Boolean::class.javaPrimitiveType) {
+                    method.isAccessible = true
+                    method.invoke(receiver, p1, p2)
+                } else {
+                    throw InvalidAnnotationException(String.format(EXCEPTION_EXCEPT_TWO_PARAMETER,
+                            "void onSeekbarChange(int progress, boolean fromUser)"))
+                }
+            }
+        })
     }
 
     companion object {
