@@ -38,7 +38,7 @@ Annotation Field with @BindView with Optional View ID for PyxInjector to find an
 ```Java
 private @BindView TextView mTxtName; // 1)
 private @BindView TextView txtName2; // 2)
-private @BindView(resource = R.id.txtName3) TextView txtName3; // 3)
+private @BindView(R.id.txtName3) TextView txtName3; // 3)
 ```
 
 It support three mode of Injection
@@ -83,12 +83,12 @@ Precondition: **Activity / Fragment will inherit *InjectActivity*, *InjectFragme
 Annotation Field with @OnClick, @OnClicks with View ID to find and invoke methods
 
 ```Java
-@OnClick(resource = R.id.btnDo)
+@OnClick(R.id.btnDo)
 private void clickDo() { // 1)
     Toast.makeText(getActivity(), "Clicked fragment", Toast.LENGTH_SHORT).show();
 }
 
-@OnClicks(resource = {R.id.btnDo, R.id.btnDo2})
+@OnClicks({R.id.btnDo, R.id.btnDo2})
 private void clickDo(View v) { // 2)
     Intent intent = new Intent(this, SecondActivity.class);
     intent.putExtra("name", "John");
@@ -107,12 +107,12 @@ Precondition: **Activity / Fragment will inherit *InjectActivity*, *InjectFragme
 Annotation Field with @OnLongClick, @OnLongClicks with View ID to find and invoke methods
 
 ```Java
-@OnLongClick(resource = R.id.btnDo)
+@OnLongClick(R.id.btnDo)
 private void clickDo() { // 1)
     Toast.makeText(getActivity(), "Clicked fragment", Toast.LENGTH_SHORT).show();
 }
 
-@OnLongClicks(resource = {R.id.btnDo, R.id.btnDo2}, defaultReturn = true)
+@OnLongClicks(value = {R.id.btnDo, R.id.btnDo2}, defaultReturn = true)
 private void clickDo(View v) { // 2)
     Intent intent = new Intent(this, SecondActivity.class);
     intent.putExtra("name", "John");
@@ -126,7 +126,7 @@ It support three mode of Injection
 2. methods with View parameter
 3. defaultReturn : true if the callback consumed the long click, false (default or ignore) otherwise.
 
-#### *@OnSeekbarChange*
+#### *@OnSeekbarChange* [Since 1.1]
 Precondition: **Activity / Fragment will inherit *InjectActivity*, *InjectFragment*, *InjectSupportFragment* or your custom object**
 
 Annotation Field with @OnSeekbarChange with View ID to find and invoke OnSeekBarChangeListener.onProgressChanged(seekbar: SeekBar?, progress: Int, fromUser: Boolean)
