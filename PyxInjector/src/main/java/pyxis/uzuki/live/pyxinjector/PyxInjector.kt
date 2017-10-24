@@ -1,5 +1,6 @@
 package pyxis.uzuki.live.pyxinjector
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Fragment
 import android.content.Context
@@ -272,6 +273,10 @@ class PyxInjector {
 
     companion object {
         var config: Config = Config(BindViewPrefix.NONE)
+
+        @SuppressLint("StaticFieldLeak")
+        @JvmStatic
+        val instance: PyxInjector = PyxInjector()
 
         @JvmStatic
         fun initializeApplication(config: Config) {

@@ -139,7 +139,6 @@ private void changeSeekbar(int progress, boolean fromUser) {
 ```
 
 #### *@OnEditTextChange* [Since 1.1]
-
 Precondition: **Activity / Fragment will inherit *InjectActivity*, *InjectFragment*, *InjectSupportFragment* or your custom object**
 
 Annotation Field with @OnSeekbarChange with View ID to find and invoke methods of TextWatcher
@@ -159,6 +158,19 @@ private void changeBeforeEditText(EditText editText, CharSequence s, int start, 
 @OnEditTextChange(R.id.editText)
 private void changeTextEditText(EditText editText, CharSequence s, int start, int before, int count) {
     txtName3.setText(String.format("changeTextEditText:: s = %s, start = %d, before = %d, count = %d", s, start, before, count));
+}
+```
+
+### Non-Activity / Fragment Binding [Since 1.1]
+
+```Java
+public class ListHolder extends RecyclerView.ViewHolder {
+    private @BindView TextView txtNum;
+
+    public ListHolder(View itemView) {
+        super(itemView);
+        PyxInjector.getInstance().execute(getActivity(), this, itemView);
+    }
 }
 ```
 
