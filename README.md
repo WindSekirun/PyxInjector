@@ -138,6 +138,30 @@ private void changeSeekbar(int progress, boolean fromUser) {
 }
 ```
 
+#### *@OnEditTextChange* [Since 1.1]
+
+Precondition: **Activity / Fragment will inherit *InjectActivity*, *InjectFragment*, *InjectSupportFragment* or your custom object**
+
+Annotation Field with @OnSeekbarChange with View ID to find and invoke methods of TextWatcher
+
+
+```Java
+@OnEditTextChange(value = R.id.editText, trigger = EditTextChangeTrigger.AFTER)
+private void changeAfterEditText(EditText editText) {
+    mTxtName.setText("changeAfterEditText::");
+}
+
+@OnEditTextChange(value = R.id.editText, trigger = EditTextChangeTrigger.BEFORE)
+private void changeBeforeEditText(EditText editText, CharSequence s, int start, int count, int after) {
+    txtName2.setText(String.format("changeBeforeEditText:: s = %s, start = %d, count = %d, after = %d", s, start, count, after));
+}
+
+@OnEditTextChange(R.id.editText)
+private void changeTextEditText(EditText editText, CharSequence s, int start, int before, int count) {
+    txtName3.setText(String.format("changeTextEditText:: s = %s, start = %d, before = %d, count = %d", s, start, before, count));
+}
+```
+
 ### Config (Optional)
 as 1.0.0 We support Config of PyxInjector.
 
