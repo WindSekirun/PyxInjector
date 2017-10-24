@@ -24,7 +24,7 @@ allprojects {
 *app/build.gradle*
 ```
 dependencies {
-    implementation 'com.github.WindSekirun:PyxInjector:1.1.0'
+    implementation 'com.github.WindSekirun:PyxInjector:1.1.1'
 }
 ```
 
