@@ -48,13 +48,16 @@ class PyxInjector {
             cls.declaredMethods.filter { it.declaredAnnotations.isNotEmpty() }.forEach { method ->
                 method.declaredAnnotations.forEach {
                     when (it) {
-                        is OnClick -> attachClickListener(it.resource, method)
-                        is OnClicks -> for (i in 0 until it.resource.size) {
-                            attachClickListener(it.resource[i], method)
+                        is OnClick -> attachClickListener(it.value, method)
+                        is OnClicks -> for (i in 0 until it.value.size) {
+                            attachClickListener(it.value[i], method)
                         }
-                        is OnLongClick -> attachLongClickListener(it.resource, method, it.defaultReturn)
-                        is OnLongClicks -> for (i in 0 until it.resource.size) {
-                            attachLongClickListener(it.resource[i], method, it.defaultReturn)
+                        is OnLongClick -> attachLongClickListener(it.value, method, it.defaultReturn)
+                        is OnLongClicks -> for (i in 0 until it.value.size) {
+                            attachLongClickListener(it.value[i], method, it.defaultReturn)
+                        }
+                        is OnSeekbarChange -> {
+
                         }
                     }
                 }
@@ -69,7 +72,7 @@ class PyxInjector {
     }
 
     private fun attachFindViewById(bindView: BindView, field: Field) {
-        var id = bindView.resource
+        var id = bindView.value
         if (id == 0) {
             var name = field.name
 
