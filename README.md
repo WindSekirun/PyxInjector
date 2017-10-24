@@ -24,7 +24,7 @@ allprojects {
 *app/build.gradle*
 ```
 dependencies {
-    implementation 'com.github.WindSekirun:PyxInjector:1.0.0'
+    implementation 'com.github.WindSekirun:PyxInjector:1.1.0'
 }
 ```
 
@@ -177,7 +177,6 @@ private void changeCheckBox(boolean isChecked) {
     txtName3.setText(String.format("changeCheckBox:: isChecked = %s", String.valueOf(isChecked)));
 }
 ```
-
 
 ### Non-Activity / Fragment Binding [Since 1.1]
 
