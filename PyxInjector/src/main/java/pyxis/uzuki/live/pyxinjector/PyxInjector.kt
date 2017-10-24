@@ -15,6 +15,7 @@ import pyxis.uzuki.live.pyxinjector.config.BindViewPrefix
 import pyxis.uzuki.live.pyxinjector.config.Config
 import pyxis.uzuki.live.pyxinjector.constants.SupportFragment
 import pyxis.uzuki.live.pyxinjector.exception.*
+import pyxis.uzuki.live.richutilskt.utils.tryCatch
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
@@ -40,43 +41,45 @@ class PyxInjector {
 
     @Suppress("SENSELESS_COMPARISON")
     private fun executeReflection() {
-        var cls = receiver.javaClass
+        tryCatch {
+            var cls = receiver.javaClass
 
-        do {
-            cls.declaredFields.filter { it.declaredAnnotations.isNotEmpty() }.forEach { field ->
-                field.declaredAnnotations.forEach {
-                    when (it) {
-                        is BindView -> attachFindViewById(it, field)
-                        is Extra -> attachExtra(it, field)
-                        is Argument -> attachArgument(it, field)
+            do {
+                cls.declaredFields.filter { it.declaredAnnotations.isNotEmpty() }.forEach { field ->
+                    field.declaredAnnotations.forEach {
+                        when (it) {
+                            is BindView -> attachFindViewById(it, field)
+                            is Extra -> attachExtra(it, field)
+                            is Argument -> attachArgument(it, field)
+                        }
                     }
                 }
-            }
 
-            cls.declaredMethods.filter { it.declaredAnnotations.isNotEmpty() }.forEach { method ->
-                method.declaredAnnotations.forEach {
-                    when (it) {
-                        is OnClick -> attachClickListener(it.value, method)
-                        is OnClicks -> for (i in 0 until it.value.size) {
-                            attachClickListener(it.value[i], method)
+                cls.declaredMethods.filter { it.declaredAnnotations.isNotEmpty() }.forEach { method ->
+                    method.declaredAnnotations.forEach {
+                        when (it) {
+                            is OnClick -> attachClickListener(it.value, method)
+                            is OnClicks -> for (i in 0 until it.value.size) {
+                                attachClickListener(it.value[i], method)
+                            }
+                            is OnLongClick -> attachLongClickListener(it.value, method, it.defaultReturn)
+                            is OnLongClicks -> for (i in 0 until it.value.size) {
+                                attachLongClickListener(it.value[i], method, it.defaultReturn)
+                            }
+                            is OnSeekbarChange -> attachSeekbarChange(it, method)
+                            is OnEditTextChange -> attachEditTextChange(it, method)
+                            is OnCheckChange -> attachCheckChange(it, method)
                         }
-                        is OnLongClick -> attachLongClickListener(it.value, method, it.defaultReturn)
-                        is OnLongClicks -> for (i in 0 until it.value.size) {
-                            attachLongClickListener(it.value[i], method, it.defaultReturn)
-                        }
-                        is OnSeekbarChange -> attachSeekbarChange(it, method)
-                        is OnEditTextChange -> attachEditTextChange(it, method)
-                        is OnCheckChange -> attachCheckChange(it, method)
                     }
                 }
-            }
 
-            try {
-                cls = cls.getSuperclass()
-            } catch (e: Exception) {
-                break
-            }
-        } while (cls != null)
+                try {
+                    cls = cls.getSuperclass()
+                } catch (e: Exception) {
+                    break
+                }
+            } while (cls != null)
+        }
     }
 
     private fun attachFindViewById(bindView: BindView, field: Field) {
@@ -145,7 +148,14 @@ class PyxInjector {
     }
 
     private fun attachClickListener(id: Int, method: Method) {
-        view.findViewById<View>(id).setOnClickListener {
+        var targetView: View? = null
+
+        try {
+            targetView = view.findViewById(id)
+        } catch (e: Exception) {
+        }
+
+        targetView?.setOnClickListener {
             val types = method.parameterTypes
             if (types.size == 1 && types[0] == View::class.java) {
                 method.isAccessible = true
@@ -158,7 +168,14 @@ class PyxInjector {
     }
 
     private fun attachLongClickListener(id: Int, method: Method, returnValue: Boolean) {
-        view.findViewById<View>(id).setOnLongClickListener {
+        var targetView: View? = null
+
+        try {
+            targetView = view.findViewById(id)
+        } catch (e: Exception) {
+        }
+
+        targetView?.setOnLongClickListener {
             val types = method.parameterTypes
             if (types.size == 1 && types[0] == View::class.java) {
                 method.isAccessible = true
