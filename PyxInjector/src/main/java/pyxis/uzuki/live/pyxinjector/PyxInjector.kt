@@ -197,7 +197,6 @@ class PyxInjector {
         try {
             seekbar = view.findViewById(seekbarChange.value)
         } catch (e: Exception) {
-            throwException(CASTING_FAILED_VIEW_ID.format("SeekBar"))
             return
         }
 
@@ -231,7 +230,6 @@ class PyxInjector {
         try {
             editText = view.findViewById(editTextChange.value)
         } catch (e: Exception) {
-            throwException(CASTING_FAILED_VIEW_ID.format("EditText"))
             return
         }
 
@@ -298,7 +296,6 @@ class PyxInjector {
         try {
             compoundButton = view.findViewById(checkChange.value)
         } catch (e: Exception) {
-            throwException(CASTING_FAILED_VIEW_ID.format("CompoundButton (CheckBox, RadioButton, Switch, SwitchCompat, ToggleButton)"))
             return
         }
 
