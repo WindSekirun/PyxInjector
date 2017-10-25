@@ -14,7 +14,10 @@ import pyxis.uzuki.live.pyxinjector.annotation.*
 import pyxis.uzuki.live.pyxinjector.config.BindViewPrefix
 import pyxis.uzuki.live.pyxinjector.config.Config
 import pyxis.uzuki.live.pyxinjector.constants.SupportFragment
-import pyxis.uzuki.live.pyxinjector.exception.*
+import pyxis.uzuki.live.pyxinjector.exception.EXCEPT_FIVE_PARAMETER
+import pyxis.uzuki.live.pyxinjector.exception.EXCEPT_ONE_PARAMETER
+import pyxis.uzuki.live.pyxinjector.exception.EXCEPT_TWO_PARAMETER
+import pyxis.uzuki.live.pyxinjector.exception.throwException
 import pyxis.uzuki.live.richutilskt.utils.tryCatch
 import java.lang.reflect.Field
 import java.lang.reflect.Method
@@ -110,12 +113,12 @@ class PyxInjector {
         }
 
         val activity = receiver as Activity
-        val bundle = activity.intent.extras
-        val value = bundle.get(name)
+        val value = activity.intent.extras?.get(name)
 
-        field.isAccessible = true
-        if (value != null)
+        if (value != null) {
+            field.isAccessible = true
             field.set(receiver, value)
+        }
     }
 
     private fun attachArgument(argument: Argument, field: Field) {
@@ -135,18 +138,22 @@ class PyxInjector {
 
     private fun attachSupportFragmentArgument(name: String, field: Field) {
         val fragment = receiver as SupportFragment
-        val bundle = fragment.arguments
+        val value = fragment.arguments?.get(name)
 
-        field.isAccessible = true
-        field.set(receiver, bundle.get(name))
+        if (value != null) {
+            field.isAccessible = true
+            field.set(receiver, value)
+        }
     }
 
     private fun attachFragmentArgument(name: String, field: Field) {
         val fragment = receiver as Fragment
-        val bundle = fragment.arguments
+        val value = fragment.arguments?.get(name)
 
-        field.isAccessible = true
-        field.set(receiver, bundle.get(name))
+        if (value != null) {
+            field.isAccessible = true
+            field.set(receiver, value)
+        }
     }
 
     private fun attachClickListener(id: Int, method: Method) {
@@ -197,7 +204,6 @@ class PyxInjector {
         try {
             seekbar = view.findViewById(seekbarChange.value)
         } catch (e: Exception) {
-            throwException(CASTING_FAILED_VIEW_ID.format("SeekBar"))
             return
         }
 
@@ -231,7 +237,6 @@ class PyxInjector {
         try {
             editText = view.findViewById(editTextChange.value)
         } catch (e: Exception) {
-            throwException(CASTING_FAILED_VIEW_ID.format("EditText"))
             return
         }
 
@@ -298,7 +303,6 @@ class PyxInjector {
         try {
             compoundButton = view.findViewById(checkChange.value)
         } catch (e: Exception) {
-            throwException(CASTING_FAILED_VIEW_ID.format("CompoundButton (CheckBox, RadioButton, Switch, SwitchCompat, ToggleButton)"))
             return
         }
 
