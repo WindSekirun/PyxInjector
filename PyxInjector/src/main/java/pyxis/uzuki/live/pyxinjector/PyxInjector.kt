@@ -319,6 +319,7 @@ class PyxInjector {
         }
     }
 
+
     companion object {
         var config: Config = Config(BindViewPrefix.NONE)
 
@@ -329,6 +330,11 @@ class PyxInjector {
         @JvmStatic
         fun initializeApplication(config: Config) {
             this.config = config
+        }
+
+        @JvmStatic
+        fun <T : View?> find(id: Int, view: View): T {
+            return view.findViewById<T>(id)
         }
     }
 }

@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import pyxis.uzuki.live.pyxinjector.PyxInjector;
 import pyxis.uzuki.live.pyxinjector.annotation.BindView;
 import pyxis.uzuki.live.pyxinjector.annotation.EditTextChangeTrigger;
 import pyxis.uzuki.live.pyxinjector.annotation.OnCheckChange;
@@ -15,6 +16,7 @@ import pyxis.uzuki.live.pyxinjector.annotation.OnClicks;
 import pyxis.uzuki.live.pyxinjector.annotation.OnEditTextChange;
 import pyxis.uzuki.live.pyxinjector.annotation.OnSeekbarChange;
 import pyxis.uzuki.live.pyxinjector.base.InjectActivity;
+import pyxis.uzuki.live.pyxinjector.utils.PyxUtils;
 
 /**
  * PyxInjector
@@ -26,13 +28,15 @@ import pyxis.uzuki.live.pyxinjector.base.InjectActivity;
 public class MainActivity extends InjectActivity {
 
     private @BindView TextView mTxtName; // resource id != field name with BindViewPrefix.PREFIX_M
-    private @BindView TextView txtName2; // resource id == field name
+    private TextView txtName2; // resource id == field name
     private @BindView(R.id.txtName3) TextView txtName3; // explicit statement
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        txtName2 = PyxInjector.find(R.id.txtName2, PyxUtils.content(this));
 
         mTxtName.setText("resource id != field name with BindViewPrefix.PREFIX_M");
         txtName2.setText("resource id == field name");
