@@ -71,7 +71,6 @@ Annotation Field with @OnCheckChange with View ID to find and invoke CompoundBut
 [Wiki](https://github.com/WindSekirun/PyxInjector/wiki/@OnCheckChange)
 
 ### Non-Activity / Fragment Binding [Since 1.1]
-
 ```Java
 public class ListHolder extends RecyclerView.ViewHolder {
     private @BindView TextView txtNum;
@@ -82,6 +81,11 @@ public class ListHolder extends RecyclerView.ViewHolder {
     }
 }
 ```
+
+### find(@resId, View) [Since 1.1.5]
+```Java
+txtName2 = PyxInjector.find(R.id.txtName2, PyxUtils.content(this));
+````
 
 ### Config (Optional)
 as 1.0.0 We support Config of PyxInjector.
