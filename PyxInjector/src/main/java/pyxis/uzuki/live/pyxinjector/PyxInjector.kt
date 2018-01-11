@@ -18,6 +18,7 @@ import pyxis.uzuki.live.pyxinjector.exception.EXCEPT_FIVE_PARAMETER
 import pyxis.uzuki.live.pyxinjector.exception.EXCEPT_ONE_PARAMETER
 import pyxis.uzuki.live.pyxinjector.exception.EXCEPT_TWO_PARAMETER
 import pyxis.uzuki.live.pyxinjector.exception.throwException
+import pyxis.uzuki.live.pyxinjector.utils.RecentlyClicked
 import pyxis.uzuki.live.richutilskt.utils.tryCatch
 import java.lang.reflect.Field
 import java.lang.reflect.Method
@@ -165,6 +166,10 @@ class PyxInjector {
         }
 
         targetView?.setOnClickListener {
+            if (RecentlyClicked.isRecentlyClicked(it)) {
+                return@setOnClickListener
+            }
+
             val types = method.parameterTypes
             if (types.size == 1 && types[0] == View::class.java) {
                 method.isAccessible = true
