@@ -18,13 +18,16 @@ import java.util.concurrent.atomic.AtomicInteger
 object RecentlyClicked {
     private val mLastClickedTimes = SparseLongArray()
     private val sNextGeneratedTagId = AtomicInteger(1)
-    private val CLICK_DELAY_MIN = 600
+    private var mClickedDelay = 600
+    private var mPreventDouble = false
 
-    fun isRecentlyClicked(view: View): Boolean {
+    fun getPreventDoubleFeature() = mPreventDouble
+
+    @JvmStatic @JvmOverloads fun isRecentlyClicked(view: View, time: Int = mClickedDelay): Boolean {
         val viewTagId = view.getTagId()
         val lastClickedTime = mLastClickedTimes.get(viewTagId, -1)
         val currentTime = SystemClock.elapsedRealtime()
-        return if (lastClickedTime == -1L || lastClickedTime + CLICK_DELAY_MIN < currentTime) {
+        return if (lastClickedTime == -1L || lastClickedTime + time < currentTime) {
             mLastClickedTimes.put(viewTagId, currentTime)
             return false
         } else {
@@ -32,7 +35,16 @@ object RecentlyClicked {
         }
     }
 
-    fun View.getTagId(): Int = (this.getTag(R.id.PYXINJECTOR_LAST_CLICKED_TAG) as Int)
+    @JvmStatic fun setRecentlyClickedDelay(time: Int) {
+        this.mClickedDelay = time
+    }
+
+    @JvmStatic fun setPreventDoubleFeature(flag: Boolean) {
+        mPreventDouble = flag
+    }
+
+    private fun View.getTagId(): Int = (this.getTag(R.id.PYXINJECTOR_LAST_CLICKED_TAG) as Int)
             .getOrDefault(sNextGeneratedTagId.incrementAndGet())
+
     private fun <T> T.getOrDefault(default: T) : T = this ?: default
 }

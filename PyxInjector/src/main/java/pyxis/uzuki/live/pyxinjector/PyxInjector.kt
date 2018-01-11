@@ -62,9 +62,9 @@ class PyxInjector {
                 cls.declaredMethods.filter { it.declaredAnnotations.isNotEmpty() }.forEach { method ->
                     method.declaredAnnotations.forEach {
                         when (it) {
-                            is OnClick -> attachClickListener(it.value, method)
+                            is OnClick -> attachClickListener(it.value, method, it.preventDouble, it.clickedTime)
                             is OnClicks -> for (i in 0 until it.value.size) {
-                                attachClickListener(it.value[i], method)
+                                attachClickListener(it.value[i], method, it.preventDouble, it.clickedTime)
                             }
                             is OnLongClick -> attachLongClickListener(it.value, method, it.defaultReturn)
                             is OnLongClicks -> for (i in 0 until it.value.size) {
@@ -157,7 +157,7 @@ class PyxInjector {
         }
     }
 
-    private fun attachClickListener(id: Int, method: Method) {
+    private fun attachClickListener(id: Int, method: Method, preventDouble: Boolean = false, clickedTime: Int = 600) {
         var targetView: View? = null
 
         try {
@@ -166,7 +166,7 @@ class PyxInjector {
         }
 
         targetView?.setOnClickListener {
-            if (RecentlyClicked.isRecentlyClicked(it)) {
+            if ((preventDouble || RecentlyClicked.getPreventDoubleFeature()) && RecentlyClicked.isRecentlyClicked(it, clickedTime)) {
                 return@setOnClickListener
             }
 

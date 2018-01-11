@@ -7,4 +7,4 @@ package pyxis.uzuki.live.pyxinjector.annotation
  */
 
 @Target(AnnotationTarget.FUNCTION)
-annotation class OnClicks(vararg val value: Int, val preventDouble: Boolean = false)
+annotation class OnClicks(vararg val value: Int, val preventDouble: Boolean = false, val clickedTime: Int = 600)

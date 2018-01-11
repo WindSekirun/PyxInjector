@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -12,6 +13,7 @@ import pyxis.uzuki.live.pyxinjector.PyxInjector;
 import pyxis.uzuki.live.pyxinjector.annotation.BindView;
 import pyxis.uzuki.live.pyxinjector.annotation.EditTextChangeTrigger;
 import pyxis.uzuki.live.pyxinjector.annotation.OnCheckChange;
+import pyxis.uzuki.live.pyxinjector.annotation.OnClick;
 import pyxis.uzuki.live.pyxinjector.annotation.OnClicks;
 import pyxis.uzuki.live.pyxinjector.annotation.OnEditTextChange;
 import pyxis.uzuki.live.pyxinjector.annotation.OnSeekbarChange;
@@ -41,6 +43,11 @@ public class MainActivity extends InjectActivity {
         mTxtName.setText("resource id != field name with BindViewPrefix.PREFIX_M");
         txtName2.setText("resource id == field name");
         txtName3.setText("explicit statement");
+    }
+
+    @OnClick(value = R.id.txtName2, preventDouble = true, clickedTime = 200)
+    private void clickName(View v) {
+        Log.e(MainActivity.class.getSimpleName(), "click name");
     }
 
     @OnClicks({R.id.btnDo, R.id.btnDo2})

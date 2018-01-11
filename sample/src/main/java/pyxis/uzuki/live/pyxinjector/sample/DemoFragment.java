@@ -20,6 +20,7 @@ import pyxis.uzuki.live.pyxinjector.annotation.BindView;
 import pyxis.uzuki.live.pyxinjector.annotation.OnClick;
 import pyxis.uzuki.live.pyxinjector.annotation.OnLongClick;
 import pyxis.uzuki.live.pyxinjector.base.InjectFragment;
+import pyxis.uzuki.live.pyxinjector.utils.RecentlyClicked;
 
 /**
  * PyxInjector
@@ -55,6 +56,7 @@ public class DemoFragment extends InjectFragment {
         adapter = new ListAdapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
+
 
         for (int i = 0; i < 17; i++) {
             itemSet.add(String.valueOf(i));
