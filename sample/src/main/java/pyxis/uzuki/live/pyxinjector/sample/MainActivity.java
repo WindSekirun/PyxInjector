@@ -13,6 +13,7 @@ import pyxis.uzuki.live.pyxinjector.PyxInjector;
 import pyxis.uzuki.live.pyxinjector.annotation.BindView;
 import pyxis.uzuki.live.pyxinjector.annotation.EditTextChangeTrigger;
 import pyxis.uzuki.live.pyxinjector.annotation.OnCheckChange;
+import pyxis.uzuki.live.pyxinjector.annotation.OnCheckChanges;
 import pyxis.uzuki.live.pyxinjector.annotation.OnClick;
 import pyxis.uzuki.live.pyxinjector.annotation.OnClicks;
 import pyxis.uzuki.live.pyxinjector.annotation.OnEditTextChange;
@@ -78,7 +79,7 @@ public class MainActivity extends InjectActivity {
         txtName3.setText(String.format("changeTextEditText:: s = %s, start = %d, before = %d, count = %d", s, start, before, count));
     }
 
-    @OnCheckChange(R.id.checkBox)
+    @OnCheckChanges({R.id.checkBox})
     private void changeCheckBox(boolean isChecked) {
         txtName3.setText(String.format("changeCheckBox:: isChecked = %s", String.valueOf(isChecked)));
     }
