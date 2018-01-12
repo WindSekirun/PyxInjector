@@ -70,9 +70,12 @@ class PyxInjector {
                             is OnLongClicks -> for (i in 0 until it.value.size) {
                                 attachLongClickListener(it.value[i], method, it.defaultReturn)
                             }
-                            is OnSeekbarChange -> attachSeekbarChange(it, method)
+                            is OnSeekbarChange -> attachSeekbarChange(it.value, method)
                             is OnEditTextChange -> attachEditTextChange(it, method)
-                            is OnCheckChange -> attachCheckChange(it, method)
+                            is OnCheckChange -> attachCheckChange(it.value, method)
+                            is OnCheckChanges -> for (i in 0 until it.value.size) {
+                                attachCheckChange(it.value[i], method)
+                            }
                         }
                     }
                 }
@@ -203,11 +206,11 @@ class PyxInjector {
         }
     }
 
-    private fun attachSeekbarChange(seekbarChange: OnSeekbarChange, method: Method) {
+    private fun attachSeekbarChange(id: Int, method: Method) {
         val seekbar: SeekBar
 
         try {
-            seekbar = view.findViewById(seekbarChange.value)
+            seekbar = view.findViewById(id)
         } catch (e: Exception) {
             return
         }
@@ -302,28 +305,27 @@ class PyxInjector {
         })
     }
 
-    private fun attachCheckChange(checkChange: OnCheckChange, method: Method) {
+    private fun attachCheckChange(id: Int, method: Method) {
         val compoundButton: CompoundButton
 
         try {
-            compoundButton = view.findViewById(checkChange.value)
+            compoundButton = view.findViewById(id)
         } catch (e: Exception) {
             return
         }
 
         val types = method.parameterTypes
-        compoundButton.setOnCheckedChangeListener { _, b ->
-            if (types.size == 1 && types[0] == Boolean::class.javaPrimitiveType) {
+        compoundButton.setOnCheckedChangeListener { button, b ->
+            if (types.size == 2 && types[1] == CompoundButton::class.java && types[0] == Boolean::class.javaPrimitiveType) {
                 method.isAccessible = true
-                method.invoke(receiver, b)
+                method.invoke(receiver, button, b)
             } else {
                 val modifier = Modifier.toString(method.modifiers)
                 val name = method.name
-                throwException(EXCEPT_ONE_PARAMETER.format("$modifier void $name(boolean isChecked)"))
+                throwException(EXCEPT_TWO_PARAMETER.format("$modifier void $name(CompoundButton view, boolean isChecked)"))
             }
         }
     }
-
 
     companion object {
         var config: Config = Config(BindViewPrefix.NONE)
