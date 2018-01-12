@@ -316,7 +316,7 @@ class PyxInjector {
 
         val types = method.parameterTypes
         compoundButton.setOnCheckedChangeListener { button, b ->
-            if (types.size == 2 && types[1] == CompoundButton::class.java && types[0] == Boolean::class.javaPrimitiveType) {
+            if (types.size == 2 && types[0] == CompoundButton::class.java && types[1] == Boolean::class.javaPrimitiveType) {
                 method.isAccessible = true
                 method.invoke(receiver, button, b)
             } else {

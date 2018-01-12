@@ -23,7 +23,9 @@ object RecentlyClicked {
 
     fun getPreventDoubleFeature() = mPreventDouble
 
-    @JvmStatic @JvmOverloads fun isRecentlyClicked(view: View, time: Int = mClickedDelay): Boolean {
+    @JvmStatic
+    @JvmOverloads
+    fun isRecentlyClicked(view: View, time: Int = mClickedDelay): Boolean {
         val viewTagId = view.getTagId()
         val lastClickedTime = mLastClickedTimes.get(viewTagId, -1)
         val currentTime = SystemClock.elapsedRealtime()
@@ -35,16 +37,24 @@ object RecentlyClicked {
         }
     }
 
-    @JvmStatic fun setRecentlyClickedDelay(time: Int) {
+    @JvmStatic
+    fun setRecentlyClickedDelay(time: Int) {
         this.mClickedDelay = time
     }
 
-    @JvmStatic fun setPreventDoubleFeature(flag: Boolean) {
+    @JvmStatic
+    fun setPreventDoubleFeature(flag: Boolean) {
         mPreventDouble = flag
     }
 
-    private fun View.getTagId(): Int = (this.getTag(R.id.PYXINJECTOR_LAST_CLICKED_TAG) as Int)
-            .getOrDefault(sNextGeneratedTagId.incrementAndGet())
+    private fun View.getTagId(): Int {
+        var tag = this.getTag(R.id.PYXINJECTOR_LAST_CLICKED_TAG) as? Int ?: return -1
 
-    private fun <T> T.getOrDefault(default: T) : T = this ?: default
+        if (tag == -1) {
+            tag = sNextGeneratedTagId.getAndIncrement()
+            this.setTag(R.id.PYXINJECTOR_LAST_CLICKED_TAG, tag)
+        }
+
+        return tag
+    }
 }

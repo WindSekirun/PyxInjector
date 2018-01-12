@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import pyxis.uzuki.live.pyxinjector.PyxInjector;
 import pyxis.uzuki.live.pyxinjector.annotation.BindView;
@@ -39,6 +41,8 @@ public class MainActivity extends InjectActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
         txtName2 = PyxInjector.find(R.id.txtName2, PyxUtils.content(this));
 
         mTxtName.setText("resource id != field name with BindViewPrefix.PREFIX_M");
@@ -51,7 +55,12 @@ public class MainActivity extends InjectActivity {
         Log.e(MainActivity.class.getSimpleName(), "click name");
     }
 
-    @OnClicks({R.id.btnDo, R.id.btnDo2})
+    @OnClick(value = R.id.btnDo, preventDouble = true)
+    private void clickDo1() {
+        Toast.makeText(this, "sometime", Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClicks({R.id.btnDo2})
     private void clickDo(View v) {
         Intent intent = new Intent(this, SecondActivity.class);
         intent.putExtra("name", "John");
@@ -79,8 +88,8 @@ public class MainActivity extends InjectActivity {
         txtName3.setText(String.format("changeTextEditText:: s = %s, start = %d, before = %d, count = %d", s, start, before, count));
     }
 
-    @OnCheckChanges({R.id.checkBox})
-    private void changeCheckBox(boolean isChecked) {
+    @OnCheckChange(R.id.checkBox)
+    private void changeCheckBox(CompoundButton view, boolean isChecked) {
         txtName3.setText(String.format("changeCheckBox:: isChecked = %s", String.valueOf(isChecked)));
     }
 }
