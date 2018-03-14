@@ -32,6 +32,8 @@ dependencies {
 1. extending ```InjectActivity``` or ```InjectSupportFragment``` in your activity / fragment
 2. Done, you can use any annotation fields below.
 
+If you can't extending pre-bulit classes like ```InjectActivity```, you can call ```PyxInjector.getInstance().inject``` maunally. please see [Custom object](https://github.com/WindSekirun/PyxInjector/wiki/[Execute]-Custom-Object) in wiki
+
 ### Annotation Fields
 
 #### *@BindView*
