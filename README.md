@@ -28,6 +28,10 @@ dependencies {
 }
 ```
 
+#### Start to use
+1. extending ```InjectActivity``` or ```InjectSupportFragment``` in your activity / fragment
+2. Done, you can use any annotation fields below.
+
 ### Annotation Fields
 
 #### *@BindView*
